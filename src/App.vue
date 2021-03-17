@@ -3,12 +3,14 @@
 		<section class="s-board container">
 			<ul
 				class="component c-cards c-cards--list d-flex justify-content-center align-items-center flex-wrap"
+				v-if="allCards && allCards.length"
 			>
 				<li
 					class="c-cards__item p-1"
-					v-for="(card, index) in cards"
+					v-for="(card, index) in allCards"
 					:key="index"
-					@click.prevent="flipCard(card)"
+					@click="flipCard(card)"
+					:class="{ 'is-toggled': card.toggled }"
 				>
 					<card
 						:class="{ 'is-toggled': card.toggled }"
@@ -21,6 +23,7 @@
 </template>
 
 <script>
+import { cloneDeep, shuffle } from 'lodash-es';
 import Card from '@/components/Card';
 export default {
 	name: 'App',
@@ -30,6 +33,7 @@ export default {
 	},
 
 	data: () => ({
+		allCards: [],
 		cards: [
 			{
 				name: 'Orange',
@@ -97,7 +101,14 @@ export default {
 	methods: {
 		flipCard(card) {
 			card.toggled = !card.toggled;
+			console.log(card.toggled);
 		},
+	},
+
+	created() {
+		this.allCards = shuffle(
+			this.allCards.concat(cloneDeep(this.cards), cloneDeep(this.cards)),
+		);
 	},
 };
 </script>
