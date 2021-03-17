@@ -8,8 +8,12 @@
 					class="c-cards__item p-1"
 					v-for="(card, index) in cards"
 					:key="index"
+					@click.prevent="flipCard(card)"
 				>
-					<card :card="card" />
+					<card
+						:class="{ 'is-toggled': card.toggled }"
+						:card="card"
+					/>
 				</li>
 			</ul>
 		</section>
@@ -89,6 +93,12 @@ export default {
 			},
 		],
 	}),
+
+	methods: {
+		flipCard(card) {
+			card.toggled = !card.toggled;
+		},
+	},
 };
 </script>
 

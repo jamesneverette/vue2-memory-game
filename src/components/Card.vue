@@ -1,10 +1,10 @@
-<template functional>
+<template>
 	<div class="component c-card">
 		<div class="c-card__inner position-relative">
 			<div class="c-card__inner-front position-absolute"></div>
 			<div
 				class="c-card__inner-back position-absolute"
-				:style="{ backgroundColor: props.card.color }"
+				:style="{ backgroundColor: card.color }"
 			></div>
 		</div>
 	</div>
@@ -56,7 +56,13 @@ export default {
 			width: 100%;
 		}
 		&-front {
-			background: black;
+			background-color: #4158d0;
+			background-image: linear-gradient(
+				43deg,
+				#4158d0 0%,
+				#c850c0 46%,
+				#ffcc70 100%
+			);
 		}
 		&-back {
 			-webkit-transform: rotateY(-180deg);
@@ -69,7 +75,7 @@ export default {
 	}
 
 	&.is-toggled {
-		&__inner {
+		.c-card__inner {
 			&-front {
 				-webkit-transform: rotateY(180deg);
 				-moz-transform: rotateY(180deg);
