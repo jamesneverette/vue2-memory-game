@@ -39,76 +39,138 @@ export default {
 				name: 'Orange',
 				color: 'orange',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Red',
 				color: 'red',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Blue',
 				color: 'blue',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Green',
 				color: 'green',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Yellow',
 				color: 'yellow',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Purple',
 				color: 'purple',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Grey',
 				color: 'grey',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Black',
 				color: 'black',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Teal',
 				color: 'teal',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Pink',
 				color: 'pink',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Magenta',
 				color: 'magenta',
 				toggled: false,
+				matched: false,
 			},
 			{
 				name: 'Brown',
 				color: 'brown',
 				toggled: false,
+				matched: false,
 			},
 		],
+		matches: 0,
+		moves: 0,
+		toggledCards: [],
 	}),
+
+	computed: {
+		finished() {
+			if (this.matches === 12) {
+				return true;
+			}
+
+			return false;
+		},
+	},
 
 	methods: {
 		flipCard(card) {
 			card.toggled = !card.toggled;
-			console.log(card.toggled);
+
+			if (this.toggledCards.length < 2) {
+				this.toggledCards.push(card);
+			}
+			if (this.toggledCards.length === 2) {
+				this.incrementMoves();
+				this.matchCards();
+			}
+		},
+		matchCards() {
+			if (this.toggledCards[0].name === this.toggledCards[1].name) {
+				setTimeout(() => {
+					this.toggledCards.forEach((card) => {
+						card.matched = true;
+					});
+					this.incrementMatches();
+					this.toggledCards = [];
+				}, 400);
+			} else {
+				setTimeout(() => {
+					this.toggledCards.forEach((card) => {
+						card.toggled = false;
+					});
+					this.toggledCards = [];
+				}, 800);
+			}
+		},
+		incrementMoves() {
+			this.moves += 1;
+		},
+		incrementMatches() {
+			this.matches += 1;
+		},
+		shuffleCards() {
+			this.allCards = shuffle(
+				this.allCards.concat(
+					cloneDeep(this.cards),
+					cloneDeep(this.cards),
+				),
+			);
 		},
 	},
 
 	created() {
-		this.allCards = shuffle(
-			this.allCards.concat(cloneDeep(this.cards), cloneDeep(this.cards)),
-		);
+		this.shuffleCards();
 	},
 };
 </script>
