@@ -27,7 +27,6 @@ export default {
 .c-card {
 	cursor: pointer;
 	height: 140px;
-	perspective: 1000;
 	width: 100%;
 
 	&__inner {
@@ -37,7 +36,7 @@ export default {
 		&-front,
 		&-back {
 			backface-visibility: hidden;
-			transition: 0.6s;
+			transition: 0.5s;
 			transform-style: preserve-3d;
 			top: 0;
 			left: 0;
@@ -69,6 +68,11 @@ export default {
 				transform: rotateY(0deg);
 			}
 		}
+	}
+	&.is-matched {
+		opacity: 0;
+		pointer-events: none;
+		transition: 0.5s;
 	}
 }
 </style>

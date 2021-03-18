@@ -1,5 +1,6 @@
 <template>
 	<div id="app">
+		<MainHeader :moves="moves" :matches="matches" :finished="finished" />
 		<section class="s-board container">
 			<ul
 				class="component c-cards c-cards--list d-flex justify-content-center align-items-center flex-wrap"
@@ -9,27 +10,51 @@
 					class="c-cards__item p-1"
 					v-for="(card, index) in allCards"
 					:key="index"
-					@click="flipCard(card)"
-					:class="{ 'is-toggled': card.toggled }"
+					@click="
+						!card.matched &&
+						toggledCards.length < 2 &&
+						!card.toggled
+							? flipCard(card)
+							: undefined
+					"
+					@keyup.enter="
+						!card.matched &&
+						toggledCards.length < 2 &&
+						!card.toggled
+							? flipCard(card)
+							: undefined
+					"
+					tabindex="1"
 				>
 					<card
-						:class="{ 'is-toggled': card.toggled }"
+						:class="[
+							{ 'is-toggled': card.toggled },
+							{ 'is-matched': card.matched },
+						]"
 						:card="card"
 					/>
 				</li>
 			</ul>
 		</section>
+		<button
+			class="component c-button position-fixed py-2 px-4"
+			@click="reset"
+		>
+			Reset
+		</button>
 	</div>
 </template>
 
 <script>
 import { cloneDeep, shuffle } from 'lodash-es';
 import Card from '@/components/Card';
+import MainHeader from '@/components/MainHeader';
 export default {
 	name: 'App',
 
 	components: {
 		Card,
+		MainHeader,
 	},
 
 	data: () => ({
@@ -115,7 +140,7 @@ export default {
 
 	computed: {
 		finished() {
-			if (this.matches === 12) {
+			if (this.matches === this.allCards.length / 2) {
 				return true;
 			}
 
@@ -159,7 +184,13 @@ export default {
 		incrementMatches() {
 			this.matches += 1;
 		},
+		reset() {
+			this.moves = 0;
+			this.matches = 0;
+			this.shuffleCards();
+		},
 		shuffleCards() {
+			this.allCards = [];
 			this.allCards = shuffle(
 				this.allCards.concat(
 					cloneDeep(this.cards),
@@ -192,7 +223,27 @@ export default {
 		padding: 0;
 	}
 	&__item {
-		flex: 0 1 20%;
+		flex: 0 1 25%;
+		outline: none;
+	}
+}
+
+.c-button {
+	background: #000;
+	border: none;
+	bottom: 12px;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	line-height: 1;
+	text-align: center;
+	right: 12px;
+	z-index: 10;
+}
+
+@media screen and (min-width: 650px) {
+	.c-cards__item {
+		flex: 0 1 16%;
 	}
 }
 </style>
