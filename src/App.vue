@@ -25,6 +25,16 @@
 							: undefined
 					"
 					tabindex="1"
+					:style="[
+						{ 'flex-basis': cardFlexBasis + '%' },
+						{ 'pointer-events': !card.matched ? 'auto' : 'none' },
+						{
+							cursor:
+								toggledCards.length === 2
+									? 'not-allowed'
+									: 'pointer',
+						},
+					]"
 				>
 					<card
 						:class="[
@@ -86,6 +96,9 @@ export default {
 			}
 
 			return false;
+		},
+		cardFlexBasis() {
+			return (4 / this.deck.length) * 100;
 		},
 	},
 
@@ -167,7 +180,8 @@ export default {
 		padding: 0;
 	}
 	&__item {
-		flex: 0 1 25%;
+		flex-grow: 0;
+		flex-shrink: 0;
 		outline-width: 0px;
 
 		&:focus {
@@ -187,11 +201,5 @@ export default {
 	text-align: center;
 	right: 12px;
 	z-index: 10;
-}
-
-@media screen and (min-width: 650px) {
-	.c-cards__item {
-		flex: 0 1 16%;
-	}
 }
 </style>

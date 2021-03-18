@@ -25,7 +25,6 @@ export default {
 
 <style lang="scss" scoped>
 .c-card {
-	cursor: pointer;
 	height: 140px;
 	width: 100%;
 
