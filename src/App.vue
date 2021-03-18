@@ -168,7 +168,11 @@ export default {
 	}
 	&__item {
 		flex: 0 1 25%;
-		outline: none;
+		outline-width: 0px;
+
+		&:focus {
+			outline-width: 2px;
+		}
 	}
 }
 
