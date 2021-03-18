@@ -4,11 +4,11 @@
 		<section class="s-board container">
 			<ul
 				class="component c-cards c-cards--list d-flex justify-content-center align-items-center flex-wrap"
-				v-if="allCards && allCards.length"
+				v-if="deck && deck.length"
 			>
 				<li
 					class="c-cards__item p-1"
-					v-for="(card, index) in allCards"
+					v-for="(card, index) in deck"
 					:key="index"
 					@click="
 						!card.matched &&
@@ -38,7 +38,7 @@
 		</section>
 		<button
 			class="component c-button position-fixed py-2 px-4"
-			@click="reset"
+			@click="reset(deck)"
 		>
 			Reset
 		</button>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { card } from '@/classes';
 import { cloneDeep, shuffle } from 'lodash-es';
 import Card from '@/components/Card';
 import MainHeader from '@/components/MainHeader';
@@ -58,81 +59,21 @@ export default {
 	},
 
 	data: () => ({
-		allCards: [],
-		cards: [
-			{
-				name: 'Orange',
-				color: 'orange',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Red',
-				color: 'red',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Blue',
-				color: 'blue',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Green',
-				color: 'green',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Yellow',
-				color: 'yellow',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Purple',
-				color: 'purple',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Grey',
-				color: 'grey',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Black',
-				color: 'black',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Teal',
-				color: 'teal',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Pink',
-				color: 'pink',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Magenta',
-				color: 'magenta',
-				toggled: false,
-				matched: false,
-			},
-			{
-				name: 'Brown',
-				color: 'brown',
-				toggled: false,
-				matched: false,
-			},
+		colors: [
+			'orange',
+			'red',
+			'blue',
+			'green',
+			'yellow',
+			'purple',
+			'grey',
+			'black',
+			'teal',
+			'pink',
+			'magenta',
+			'brown',
 		],
+		deck: [],
 		matches: 0,
 		moves: 0,
 		toggledCards: [],
@@ -140,7 +81,7 @@ export default {
 
 	computed: {
 		finished() {
-			if (this.matches === this.allCards.length / 2) {
+			if (this.matches === this.deck.length / 2) {
 				return true;
 			}
 
@@ -149,6 +90,15 @@ export default {
 	},
 
 	methods: {
+		createDeck() {
+			let cards = this.colors.map((color) => {
+				return new card(color);
+			});
+
+			let deck = [].concat(cards, cloneDeep(cards));
+
+			this.shuffleDeck(deck);
+		},
 		flipCard(card) {
 			card.toggled = !card.toggled;
 
@@ -161,7 +111,7 @@ export default {
 			}
 		},
 		matchCards() {
-			if (this.toggledCards[0].name === this.toggledCards[1].name) {
+			if (this.toggledCards[0].color === this.toggledCards[1].color) {
 				setTimeout(() => {
 					this.toggledCards.forEach((card) => {
 						card.matched = true;
@@ -187,21 +137,15 @@ export default {
 		reset() {
 			this.moves = 0;
 			this.matches = 0;
-			this.shuffleCards();
+			this.createDeck();
 		},
-		shuffleCards() {
-			this.allCards = [];
-			this.allCards = shuffle(
-				this.allCards.concat(
-					cloneDeep(this.cards),
-					cloneDeep(this.cards),
-				),
-			);
+		shuffleDeck(deck) {
+			this.deck = shuffle(deck);
 		},
 	},
 
 	created() {
-		this.shuffleCards();
+		this.createDeck();
 	},
 };
 </script>
